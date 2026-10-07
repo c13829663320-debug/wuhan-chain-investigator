@@ -33,6 +33,9 @@ class Server(ThreadingHTTPServer):
         port=self.server_address[1]
         self.allowed_hosts={f'127.0.0.1:{port}',f'localhost:{port}'}
         self.allowed_origins={origin} if origin else {f'http://127.0.0.1:{p}' for p in [port,5202,5212]} | {f'http://localhost:{p}' for p in [port,5202,5212]}
+        demo_origin=os.environ.get('DEMO_ORIGIN','').strip()
+        if demo_origin:
+            self.allowed_origins=set(self.allowed_origins); self.allowed_origins.add(demo_origin)
 
 class Handler(BaseHTTPRequestHandler):
     protocol_version='HTTP/1.1'

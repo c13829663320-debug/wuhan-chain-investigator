@@ -1,0 +1,9 @@
+node_modules/
+dist/
+runtime/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+data/
+docs/deployment/upload/

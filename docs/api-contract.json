@@ -1,0 +1,42 @@
+{
+  "project": "江城链察",
+  "version": "1.0.0",
+  "basePath": "/eth-investigator/api",
+  "serverPort": 8775,
+  "endpoints": {
+    "GET /health": {"response": {"ok": true, "project": "江城链察", "version": "1.0.0"}},
+    "GET /catalog": {"response": {"skills": "array of {id,name,stage,status,description}", "agents": "array of {id,name,stage,executor,skills}", "harness": "array of {id,name,rule}", "formulas": "array of {id,label,formula,limitation}", "limitations": "string[]"}},
+    "POST /investigate": {
+      "request": {"mode": "live | demo", "transaction_hash": "optional 0x plus 64 hex chars; only allowed in live mode"},
+      "response": {
+        "schema": "jiangcheng-chain-investigation/1",
+        "mode": "live | demo",
+        "issued_at": "UTC ISO-8601 collection time",
+        "input": {"mode": "live | demo", "selection": "transaction | finalized_sample | synthetic", "transaction_hash": "hash | null", "sample_limit": 6},
+        "output": {
+          "source": {"rpc": "fixed PublicNode URL | null", "name": "source name", "chain_id": 1, "block_number": 0, "block_hash": "0x…", "block_timestamp": 0, "transaction_time": "UTC ISO-8601", "collected_at": "UTC ISO-8601", "block_age_seconds": 0, "historical_transaction": false, "finalized_block_number": 0, "finalized_block_hash": "0x…", "collection_duration_ms": 0, "explorer_url": "Etherscan block URL | null"},
+          "summary": {"sample_count": 0, "success_count": 0, "failed_count": 0, "finding_count": 0, "attempted_value_eth": "exact decimal string", "settled_outer_value_eth": "exact decimal string; success outer value, not net wallet balance", "actual_fee_eth": "exact decimal string; execution gas plus blob fee where present"},
+          "sampled_transactions": "array of {hash,from,to,status,block_number,block_hash,transaction_index,value_wei,value_eth,settled_outer_value_wei,settled_outer_value_eth,gas_limit,gas_used,effective_gas_price_wei,execution_fee_wei,blob_fee_wei,actual_fee_wei,actual_fee_eth,gas_use_ratio_percent,selector,input,explorer_url}",
+          "findings": "array of {id,rule_id,transaction_hash,label,severity,observation,evidence_fields,limitation}",
+          "hypotheses": "array of {id,transaction_hash,title,facts,possible_explanations,next_checks,conclusion_status}",
+          "timeline": "array of {id,time,kind,title,detail,transaction_hash}",
+          "interpretation": {"method": "deterministic_evidence_rules", "attribution": "no entity or attack attribution", "scope": "bounded sample; not tracing full fund flows"}
+        },
+        "checks": "array of {id,label,passed,observed}",
+        "execution_trace": "5 stages [{stage_id,agent_id,executor,used_skill_ids,input_hash,output_hash}] — deterministic Python tools, not LLM agents",
+        "raw_snapshot": "normalized and bounded chainId, block/finalized metadata, txs, receipts, collection metadata",
+        "formulas": "same catalog formulas",
+        "limitations": "string[]",
+        "receipt_hash": "SHA-256 over canonical JSON excluding this key",
+        "authenticity": {"signed": false, "on_chain": false, "cross_source_verified": false}
+      }
+    },
+    "POST /verify": {
+      "request": {"receipt": "complete downloaded receipt object"},
+      "response": {"valid": true, "receipt_hash_valid": true, "rules_replay_valid": true, "authenticity_verified": false, "chain_requeried": false, "persisted": false, "note": "Chinese explanation"}
+    }
+  },
+  "errors": {"shape": {"error": "Chinese actionable message"}, "statuses": {"400": "bad mode/hash/body", "403": "invalid Origin/Host", "413": "body > 600 KiB", "429": "another RPC collection in flight", "502": "RPC incomplete/pending/not finalized/wrong chain/invalid associations"}},
+  "limits": {"maxSampleTransactions": 6, "maxReceiptFileBytes": 512000, "maxRequestBytes": 614400, "maxInputHexBytesPerTransaction": 16384},
+  "frontendNotes": ["No authentication; stateless read-only chain investigation. POST requires PUBLIC_ORIGIN when deployed.", "Real and demo modes must remain visibly distinct; all blockchain hyperlinks are null in demo.", "Historical finalized transaction accepted; transaction block time is distinct from collection time. Freshness gate applies to current finalized checkpoint, not transaction age.", "Download full response JSON as receipt; verify by posting {receipt}.", "Numbers ending in wei, ETH decimals and gas counters are strings; never coerce to floating point for arithmetic.", "No stored history, no wallet actions, no LLM spend. Quantified values are chain-derived observations, not fraud conclusions."]
+}

@@ -1,0 +1,780 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "mode",
+    "issued_at",
+    "input",
+    "output",
+    "checks",
+    "execution_trace",
+    "raw_snapshot",
+    "formulas",
+    "limitations",
+    "authenticity",
+    "receipt_hash"
+  ],
+  "properties": {
+    "schema": {
+      "const": "jiangcheng-chain-investigation/1"
+    },
+    "mode": {
+      "enum": [
+        "live",
+        "demo"
+      ]
+    },
+    "issued_at": {
+      "type": "string"
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "selection",
+        "transaction_hash",
+        "sample_limit"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "selection": {
+          "enum": [
+            "transaction",
+            "finalized_sample",
+            "synthetic"
+          ]
+        },
+        "transaction_hash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sample_limit": {
+          "type": "integer"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "summary",
+        "sampled_transactions",
+        "findings",
+        "hypotheses",
+        "timeline",
+        "interpretation"
+      ],
+      "properties": {
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rpc",
+            "name",
+            "chain_id",
+            "block_number",
+            "block_hash",
+            "block_timestamp",
+            "transaction_time",
+            "collected_at",
+            "block_age_seconds",
+            "historical_transaction",
+            "finalized_block_number",
+            "finalized_block_hash",
+            "collection_duration_ms",
+            "explorer_url"
+          ],
+          "properties": {
+            "rpc": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": "string"
+            },
+            "chain_id": {
+              "type": "integer"
+            },
+            "block_number": {
+              "type": "integer"
+            },
+            "block_hash": {
+              "type": "string"
+            },
+            "block_timestamp": {
+              "type": "integer"
+            },
+            "transaction_time": {
+              "type": "string"
+            },
+            "collected_at": {
+              "type": "string"
+            },
+            "block_age_seconds": {
+              "type": "integer"
+            },
+            "historical_transaction": {
+              "type": "boolean"
+            },
+            "finalized_block_number": {
+              "type": "integer"
+            },
+            "finalized_block_hash": {
+              "type": "string"
+            },
+            "collection_duration_ms": {
+              "type": "integer"
+            },
+            "explorer_url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sample_count",
+            "success_count",
+            "failed_count",
+            "finding_count",
+            "attempted_value_eth",
+            "settled_outer_value_eth",
+            "actual_fee_eth"
+          ],
+          "properties": {
+            "sample_count": {
+              "type": "integer"
+            },
+            "success_count": {
+              "type": "integer"
+            },
+            "failed_count": {
+              "type": "integer"
+            },
+            "finding_count": {
+              "type": "integer"
+            },
+            "attempted_value_eth": {
+              "type": "string"
+            },
+            "settled_outer_value_eth": {
+              "type": "string"
+            },
+            "actual_fee_eth": {
+              "type": "string"
+            }
+          }
+        },
+        "sampled_transactions": {
+          "type": "array",
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "hash",
+              "from",
+              "to",
+              "status",
+              "block_number",
+              "block_hash",
+              "transaction_index",
+              "value_wei",
+              "value_eth",
+              "settled_outer_value_wei",
+              "settled_outer_value_eth",
+              "gas_limit",
+              "gas_used",
+              "effective_gas_price_wei",
+              "execution_fee_wei",
+              "blob_fee_wei",
+              "actual_fee_wei",
+              "actual_fee_eth",
+              "gas_use_ratio_percent",
+              "selector",
+              "input",
+              "explorer_url"
+            ],
+            "properties": {
+              "hash": {
+                "type": "string"
+              },
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "type": "integer"
+              },
+              "block_number": {
+                "type": "integer"
+              },
+              "block_hash": {
+                "type": "string"
+              },
+              "transaction_index": {
+                "type": "integer"
+              },
+              "value_wei": {
+                "type": "string"
+              },
+              "value_eth": {
+                "type": "string"
+              },
+              "settled_outer_value_wei": {
+                "type": "string"
+              },
+              "settled_outer_value_eth": {
+                "type": "string"
+              },
+              "gas_limit": {
+                "type": "string"
+              },
+              "gas_used": {
+                "type": "string"
+              },
+              "effective_gas_price_wei": {
+                "type": "string"
+              },
+              "execution_fee_wei": {
+                "type": "string"
+              },
+              "blob_fee_wei": {
+                "type": "string"
+              },
+              "actual_fee_wei": {
+                "type": "string"
+              },
+              "actual_fee_eth": {
+                "type": "string"
+              },
+              "gas_use_ratio_percent": {
+                "type": "string"
+              },
+              "selector": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "input": {
+                "type": "string"
+              },
+              "explorer_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "findings": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "rule_id",
+              "transaction_hash",
+              "label",
+              "severity",
+              "observation",
+              "evidence_fields",
+              "limitation"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "rule_id": {
+                "type": "string"
+              },
+              "transaction_hash": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "severity": {
+                "type": "string"
+              },
+              "observation": {
+                "type": "string"
+              },
+              "evidence_fields": {
+                "type": "array",
+                "maxItems": 128,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "limitation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "hypotheses": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "transaction_hash",
+              "title",
+              "facts",
+              "possible_explanations",
+              "next_checks",
+              "conclusion_status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "transaction_hash": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "facts": {
+                "type": "array",
+                "maxItems": 128,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "possible_explanations": {
+                "type": "array",
+                "maxItems": 128,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "next_checks": {
+                "type": "array",
+                "maxItems": 128,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "conclusion_status": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "timeline": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "time",
+              "kind",
+              "title",
+              "detail",
+              "transaction_hash"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "time": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "detail": {
+                "type": "string"
+              },
+              "transaction_hash": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "interpretation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "method",
+            "attribution",
+            "scope"
+          ],
+          "properties": {
+            "method": {
+              "type": "string"
+            },
+            "attribution": {
+              "type": "string"
+            },
+            "scope": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "label",
+          "passed",
+          "observed"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "passed": {
+            "type": "boolean"
+          },
+          "observed": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "execution_trace": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stage_id",
+          "agent_id",
+          "executor",
+          "used_skill_ids",
+          "input_hash",
+          "output_hash"
+        ],
+        "properties": {
+          "stage_id": {
+            "type": "string"
+          },
+          "agent_id": {
+            "type": "string"
+          },
+          "executor": {
+            "type": "string"
+          },
+          "used_skill_ids": {
+            "type": "array",
+            "maxItems": 128,
+            "items": {
+              "type": "string"
+            }
+          },
+          "input_hash": {
+            "type": "string"
+          },
+          "output_hash": {
+            "type": "string"
+          }
+        }
+      },
+      "minItems": 5
+    },
+    "raw_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "chain_id",
+        "selection",
+        "requested_hash",
+        "block",
+        "finalized",
+        "transactions",
+        "receipts",
+        "collected_at",
+        "collection_duration_ms"
+      ],
+      "properties": {
+        "chain_id": {
+          "type": "integer"
+        },
+        "selection": {
+          "type": "string"
+        },
+        "requested_hash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "block": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "number",
+            "hash",
+            "timestamp",
+            "transaction_count",
+            "selected_transaction_hashes"
+          ],
+          "properties": {
+            "number": {
+              "type": "integer"
+            },
+            "hash": {
+              "type": "string"
+            },
+            "timestamp": {
+              "type": "integer"
+            },
+            "transaction_count": {
+              "type": "integer"
+            },
+            "selected_transaction_hashes": {
+              "type": "array",
+              "maxItems": 128,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "finalized": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "number",
+            "hash",
+            "timestamp"
+          ],
+          "properties": {
+            "number": {
+              "type": "integer"
+            },
+            "hash": {
+              "type": "string"
+            },
+            "timestamp": {
+              "type": "integer"
+            }
+          }
+        },
+        "transactions": {
+          "type": "array",
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "hash",
+              "blockHash",
+              "blockNumber",
+              "transactionIndex",
+              "value",
+              "gas",
+              "type",
+              "from",
+              "to",
+              "input"
+            ],
+            "properties": {
+              "hash": {
+                "type": "string"
+              },
+              "blockHash": {
+                "type": "string"
+              },
+              "blockNumber": {
+                "type": "string"
+              },
+              "transactionIndex": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "gas": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "input": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "receipts": {
+          "type": "array",
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "transactionHash",
+              "blockHash",
+              "blockNumber",
+              "transactionIndex",
+              "status",
+              "gasUsed",
+              "effectiveGasPrice",
+              "blobGasUsed",
+              "blobGasPrice"
+            ],
+            "properties": {
+              "transactionHash": {
+                "type": "string"
+              },
+              "blockHash": {
+                "type": "string"
+              },
+              "blockNumber": {
+                "type": "string"
+              },
+              "transactionIndex": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "gasUsed": {
+                "type": "string"
+              },
+              "effectiveGasPrice": {
+                "type": "string"
+              },
+              "blobGasUsed": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "blobGasPrice": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "collected_at": {
+          "type": "integer"
+        },
+        "collection_duration_ms": {
+          "type": "integer"
+        }
+      }
+    },
+    "formulas": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "label",
+          "formula",
+          "limitation"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "formula": {
+            "type": "string"
+          },
+          "limitation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "type": "string"
+      }
+    },
+    "authenticity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "signed",
+        "on_chain",
+        "cross_source_verified"
+      ],
+      "properties": {
+        "signed": {
+          "type": "boolean"
+        },
+        "on_chain": {
+          "type": "boolean"
+        },
+        "cross_source_verified": {
+          "type": "boolean"
+        }
+      }
+    },
+    "receipt_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wutiantian.cn/eth-investigator/resources/receipt-schema.json",
+  "title": "江城链察可重放证据回执 v1",
+  "description": "结构声明；权威验收为 POST /api/verify 的规范快照、量化、解释、时间线及执行阶段全量重放。哈希不证明来源真实。"
+}

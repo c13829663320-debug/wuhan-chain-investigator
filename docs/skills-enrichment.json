@@ -1,0 +1,173 @@
+{
+  "project": "江城链察",
+  "version": "1.0.0",
+  "count": 15,
+  "source": "当前 catalog、server/chain.py、tests/test_chain.py",
+  "keyedBySkillId": {
+    "COL-01": {
+      "task": "核对 Ethereum chainId = 1。",
+      "inputs": "RPC chainId",
+      "outputs": "网络身份记录",
+      "metric": "chainId严格等于1；错链或布尔值拒绝",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_wrong_chain_rejected / test_boolean_chain_rejected"
+    },
+    "COL-02": {
+      "task": "读取 finalized 高度与时间，不把 pending 当已确认。",
+      "inputs": "当前finalized区块",
+      "outputs": "检查点高度与时间",
+      "metric": "检查点年龄−30至1800秒；pending不作已确认",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_unfinalized_rejected / test_stale_checkpoint_rejected"
+    },
+    "COL-03": {
+      "task": "严格校验 32 字节交易哈希，只查询固定 RPC。",
+      "inputs": "32字节交易哈希",
+      "outputs": "定位后的单笔交易",
+      "metric": "只接受0x+64位十六进制；必须匹配请求哈希",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_invalid_user_inputs / test_mocked_specific_hash_and_canonical_membership"
+    },
+    "COL-04": {
+      "task": "获取最多 6 笔交易及相应回执。",
+      "inputs": "区块交易及对应回执",
+      "outputs": "最多6笔归一化样本",
+      "metric": "默认样本数=min(6,区块交易数)；缺回执拒绝",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_missing_receipt_rejected / test_mocked_latest_rpc_path_and_cache"
+    },
+    "VAL-01": {
+      "task": "核对交易、回执、规范区块、交易索引和摘要。",
+      "inputs": "交易、回执与规范区块",
+      "outputs": "关联核验结果",
+      "metric": "hash、高度、交易索引及成员关联全部一致；重复数0",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_receipt_transaction_mismatch_rejected / test_wrong_canonical_member_rejected"
+    },
+    "VAL-02": {
+      "task": "检查点时效与交易发生时间分开；历史交易可验收。",
+      "inputs": "交易时间、采集时间、finalized时间",
+      "outputs": "时间分层与完整性检查",
+      "metric": "历史交易≤finalized高度；当前检查点不超过1800秒",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_historical_finalized_transaction_accepted / test_stale_checkpoint_rejected"
+    },
+    "QNT-01": {
+      "task": "整数精确计算执行 Gas 和 Blob 费用。",
+      "inputs": "gasUsed、effectiveGasPrice、Blob回执字段",
+      "outputs": "实际执行费、Blob费及合计",
+      "metric": "整数wei精确相乘相加；type=3缺Blob费用字段拒绝",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_precise_integer_and_ratio_math / test_blob_fee_included / test_missing_blob_price_rejected"
+    },
+    "QNT-02": {
+      "task": "失败交易的成功外层转移值为零，费用仍单独计入。",
+      "inputs": "transaction.value、receipt.status",
+      "outputs": "尝试值与成功外层值",
+      "metric": "status=0时成功外层值=0；费用仍保留",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_demo_exact_values_and_replay"
+    },
+    "QNT-03": {
+      "task": "有效分母与合理范围下计算。",
+      "inputs": "gasUsed、gasLimit",
+      "outputs": "Gas使用比例与观察线索",
+      "metric": "gasLimit>0且0≤gasUsed≤gasLimit；比例保留2位小数；≥95%仅作线索",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_zero_denominator_rejected / test_overused_gas_rejected / test_precise_integer_and_ratio_math"
+    },
+    "QNT-04": {
+      "task": "失败回执和 100 ETH 建议阈值，不作恶意结论。",
+      "inputs": "交易状态、外层value",
+      "outputs": "失败与大额尝试值线索",
+      "metric": "status=0或value≥100×10¹⁸wei；阈值为项目观察口径",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_demo_exact_values_and_replay"
+    },
+    "QNT-05": {
+      "task": "识别 approve 最大额度 ABI 形状，不认定授权已生效。",
+      "inputs": "目标地址与调用数据",
+      "outputs": "approve最大额度形状线索",
+      "metric": "选择器095ea7b3+64字节ABI参数；正确地址填充；额度=2²⁵⁶−1",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "授权形状、合约创建与格式边界测试；规则见server/chain.py"
+    },
+    "EXP-01": {
+      "task": "为规则线索列出事实、替代解释与后续核查。",
+      "inputs": "规则线索及证据字段",
+      "outputs": "事实、备选解释、待补核查",
+      "metric": "解释关联交易与命中规则；无证据真实主体或攻击归因0项",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_recomputed_hash_cannot_hide_derived_tampering"
+    },
+    "EXP-02": {
+      "task": "保留交易、检查点和采集时间，不虚构跨块资金轨迹。",
+      "inputs": "交易区块、finalized检查点、采集时点",
+      "outputs": "有限调查时间线",
+      "metric": "三种时间独立呈现；不虚构同块秒级先后或跨块资金路径",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_historical_finalized_transaction_accepted / test_recomputed_hash_cannot_hide_derived_tampering"
+    },
+    "RPT-01": {
+      "task": "绑定输入、快照、输出与确定性执行阶段。",
+      "inputs": "输入、冻结快照、计算输出与执行阶段",
+      "outputs": "可下载JSON回执",
+      "metric": "文件≤500KiB；5个阶段均绑定输入输出摘要",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_demo_exact_values_and_replay / test_size_bound"
+    },
+    "RPT-02": {
+      "task": "重算全部派生输出，拒绝仅重新计算哈希的输出篡改。",
+      "inputs": "完整下载回执",
+      "outputs": "摘要与全量规则重放结果",
+      "metric": "原包重放通过；改派生输出后即使重算哈希仍拒绝",
+      "schedule": "用户提交调查或导入回执时触发；无定时巡链",
+      "recipient": "链上调查者与人工复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "确定性工具已实现并测试；示例与真实读取分开",
+      "evidence": "test_recomputed_hash_cannot_hide_derived_tampering / test_old_receipt_replay_uses_collection_time"
+    }
+  }
+}
